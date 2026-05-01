@@ -4,9 +4,9 @@
  */
 
 // Database Configuration
-define('DB_HOST', 'localhost');
+define('DB_HOST', 'mysql.railway.internal');
 define('DB_USER', 'root');
-define('DB_PASSWORD', '');
+define('DB_PASSWORD', 'mSIhodLUJunQtUGIdcYgNLsNTJTSGxvK');
 define('DB_NAME', 'mini_food');
 define('DB_PORT', 3306);
 

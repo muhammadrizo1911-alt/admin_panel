@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIG BURGERS - Admin Panel</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- ===== LOGIN PAGE ===== -->
+    <div id="loginPage" class="login-page">
+        <div class="login-bg">
+            <div class="login-bg-shape shape1"></div>
+            <div class="login-bg-shape shape2"></div>
+            <div class="login-bg-shape shape3"></div>
+        </div>
+
+        <div class="login-card">
+            <div class="login-logo">
+                <div class="login-logo-icon">
+                    <i class="fas fa-utensils"></i>
+                </div>
+                <h1>Mini Food</h1>
+                <p>Admin Panel</p>
+            </div>
+
+            <div class="login-form">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Foydalanuvchi nomi</label>
+                    <input type="text" id="loginUsername" class="form-control" placeholder="admin" autocomplete="username">
+                    <span class="input-error" id="usernameError"></span>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Parol</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" autocomplete="current-password">
+                        <button type="button" class="password-toggle" id="passwordToggle">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <span class="input-error" id="passwordError"></span>
+                </div>
+
+                <div class="login-remember">
+                    <label class="remember-label">
+                        <input type="checkbox" id="rememberMe">
+                        <span>Meni eslab qol</span>
+                    </label>
+                </div>
+
+                <div class="login-error" id="loginError" style="display:none;">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span id="loginErrorText"></span>
+                </div>
+
+                <button class="btn btn-login" id="loginBtn" onclick="handleLogin()">
+                    <span id="loginBtnText"><i class="fas fa-sign-in-alt"></i> Kirish</span>
+                    <span id="loginBtnLoader" style="display:none;"><i class="fas fa-spinner fa-spin"></i> Tekshirilmoqda...</span>
+                </button>
+
+                <div class="login-hint">
+                    <i class="fas fa-info-circle"></i>
+                    Demo: <strong>admin</strong> / <strong>admin123</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MAIN APP ===== -->
+    <div id="mainApp" class="container-fluid" style="display:none;">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <span>BIG BURGERS</span>
+            </div>
+            
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="#dashboard" class="nav-link active" data-page="dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="#menu" class="nav-link" data-page="menu"><i class="fas fa-utensils"></i> Menu Boshqarish</a></li>
+                    <li><a href="#orders" class="nav-link" data-page="orders"><i class="fas fa-box"></i> Buyurtmalar</a></li>
+                    <li><a href="#customers" class="nav-link" data-page="customers"><i class="fas fa-users"></i> Mijozlar</a></li>
+                    <li><a href="#staff" class="nav-link" data-page="staff"><i class="fas fa-user-tie"></i> Xodimlar</a></li>
+                    <li><a href="#reports" class="nav-link" data-page="reports"><i class="fas fa-chart-bar"></i> Hisobotlar</a></li>
+                    <li><a href="#database" class="nav-link" data-page="database"><i class="fas fa-database"></i> Baza Boshqarish</a></li>
+                    <li><a href="#settings" class="nav-link" data-page="settings"><i class="fas fa-cog"></i> Sozlamalar</a></li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <a href="#" class="logout-btn" onclick="openLogoutSheet(); return false;"><i class="fas fa-sign-out-alt"></i> Chiqish</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+                    <h1 id="pageTitle">Dashboard</h1>
+                </div>
+                
+                <div class="header-right">
+                    <div class="search-box">
+                        <input type="text" placeholder="Qidirish...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    
+                    <div class="user-menu">
+                        <div class="user-profile">
+                            <img src="https://via.placeholder.com/40" alt="User">
+                            <div class="user-info">
+                                <span class="user-name">Muhammadrizo</span>
+                                <span class="user-role">Admin</span>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="content">
+                <!-- Dashboard Page -->
+                <div id="dashboardPage" class="page-content active">
+                    <div class="dashboard-stats">
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: #4CAF50;">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">Bugungi Buyurtmalar</span>
+                                <span class="stat-value" id="todayOrders">24</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: #2196F3;">
+                                <i class="fas fa-money-bill"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">Bugungi Daromad</span>
+                                <span class="stat-value" id="todayRevenue">1,250,000 so'm</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: #FF9800;">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">Jami Mijozlar</span>
+                                <span class="stat-value" id="totalCustomers">156</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: #9C27B0;">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">Faol Xodimlar</span>
+                                <span class="stat-value" id="activeStaff">12</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-grid">
+                        <div class="dashboard-card">
+                            <h3>So'nggi Buyurtmalar</h3>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>#ID</th>
+                                        <th>Mijoz</th>
+                                        <th>Summa</th>
+                                        <th>Holat</th>
+                                        <th>Vaqti</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentOrdersTable">
+                                    <tr>
+                                        <td>#101</td>
+                                        <td>Ali Karimov</td>
+                                        <td>85,000 so'm</td>
+                                        <td><span class="status-badge status-completed">Tayyorlandi</span></td>
+                                        <td>14:30</td>
+                                    </tr>
+                                    <tr>
+                                        <td>#100</td>
+                                        <td>Yasmin Umarova</td>
+                                        <td>120,000 so'm</td>
+                                        <td><span class="status-badge status-processing">Tayyorlanmoqda</span></td>
+                                        <td>14:15</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="dashboard-card">
+                            <h3>Top Mahsulotlar</h3>
+                            <div class="top-products">
+                                <div class="product-item">
+                                    <span class="product-name">Burger</span>
+                                    <span class="product-count">45</span>
+                                </div>
+                                <div class="product-item">
+                                    <span class="product-name">Plov</span>
+                                    <span class="product-count">38</span>
+                                </div>
+                                <div class="product-item">
+                                    <span class="product-name">Lavash</span>
+                                    <span class="product-count">32</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Menu Management Page -->
+                <div id="menuPage" class="page-content">
+                    <div class="page-header">
+                        <h2>Menu Boshqarish</h2>
+                        <button class="btn btn-primary" id="addMenuBtn"><i class="fas fa-plus"></i> Taom Qo'shish</button>
+                    </div>
+
+                    <div class="filters">
+                        <select id="categoryFilter">
+                            <option value="">Barcha Kategoriyalar</option>
+                            <option value="fast-food">Fast Food</option>
+                            <option value="drinks">Ichimliklar</option>
+                            <option value="desserts">Desertlar</option>
+                        </select>
+                        <input type="text" placeholder="Taom nomini qidirish...">
+                    </div>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Taom Nomi</th>
+                                <th>Kategoriya</th>
+                                <th>Narxi</th>
+                                <th>Mavjudligi</th>
+                                <th>Holati</th>
+                                <th>Amallar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="menuTable">
+                            <tr>
+                                <td>Burger Klassik</td>
+                                <td>Fast Food</td>
+                                <td>28,000 so'm</td>
+                                <td><span class="status-badge status-available">Mavjud</span></td>
+                                <td><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></td>
+                                <td class="action-buttons">
+                                    <button class="btn btn-sm btn-edit"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Plov</td>
+                                <td>Taomlar</td>
+                                <td>35,000 so'm</td>
+                                <td><span class="status-badge status-available">Mavjud</span></td>
+                                <td><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></td>
+                                <td class="action-buttons">
+                                    <button class="btn btn-sm btn-edit"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Orders Management Page -->
+                <div id="ordersPage" class="page-content">
+                    <div class="page-header">
+                        <h2>Buyurtmalar</h2>
+                        <div class="order-filters">
+                            <select id="statusFilter">
+                                <option value="">Barcha Holatlar</option>
+                                <option value="pending">Kutilmoqda</option>
+                                <option value="processing">Tayyorlanmoqda</option>
+                                <option value="completed">Tayyorlandi</option>
+                                <option value="cancelled">Bekor qilindi</option>
+                            </select>
+                            <input type="date" id="orderDate">
+                        </div>
+                    </div>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#ID</th>
+                                <th>Mijoz</th>
+                                <th>Taomlar Soni</th>
+                                <th>Summa</th>
+                                <th>Holat</th>
+                                <th>Vaqti</th>
+                                <th>Amallar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTable">
+                            <tr>
+                                <td>#105</td>
+                                <td>Firdavs Aliev</td>
+                                <td>3</td>
+                                <td>95,000 so'm</td>
+                                <td><span class="status-badge status-pending">Kutilmoqda</span></td>
+                                <td>14:45</td>
+                                <td class="action-buttons">
+                                    <button class="btn btn-sm btn-info" onclick="viewOrderDetails(105)"><i class="fas fa-eye"></i></button>
+                                    <button class="btn btn-sm btn-warning" onclick="updateOrderStatus(105)"><i class="fas fa-edit"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#104</td>
+                                <td>Diyor Qodirov</td>
+                                <td>2</td>
+                                <td>65,000 so'm</td>
+                                <td><span class="status-badge status-processing">Tayyorlanmoqda</span></td>
+                                <td>14:30</td>
+                                <td class="action-buttons">
+                                    <button class="btn btn-sm btn-info"><i class="fas fa-eye"></i></button>
+                                    <button class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Customers Management Page -->
+                <div id="customersPage" class="page-content">
+                    <div class="page-header">
+                        <h2>Mijozlar</h2>
+                        <button class="btn btn-primary" id="addCustomerBtn"><i class="fas fa-plus"></i> Mijoz Qo'shish</button>
+                    </div>
+
+                    <div class="filters">
+                        <input type="text" placeholder="Mijoz nomini qidirish...">
+                        <input type="text" placeholder="Telefon raqamini qidirish...">
+                    </div>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Nomi</th>
+                                <th>Telefon</th>
+                                <th>Email</th>
+                                <th>Buyurtmalar Soni</th>
+                                <th>Jami Sotib Olishi</th>
+                                <th>Ro'yxatdan O'tish Sanasi</th>
+                                <th>Amallar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customersTable">
+                            <tr>
+                                <td>Ali Karimov</td>
+                                <td>+998 91 234 56 78</td>
+                                <td>ali@example.com</td>
+                                <td>12</td>
+                                <td>450,000 so'm</td>
+                                <td>2025-01-15</td>
+                                <td class="action-buttons">
+                                    <button class="btn btn-sm btn-info"><i class="fas fa-eye"></i></button>
+                                    <button class="btn btn-sm btn-edit"><i class="fas fa-edit"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Yasmin Umarova</td>
+                                <td>+998 90 123 45 67</td>
+                                <td>yasmin@example.com</td>
+                                <td>8</td>
+                                <td>280,000 so'm</td>
+                                <td>2025-02-01</td>
+                                <td class="action-buttons">
+                                    <button class="btn btn-sm btn-info"><i class="fas fa-eye"></i></button>
+                                    <button class="btn btn-sm btn-edit"><i class="fas fa-edit"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Staff Management Page -->
+                <div id="staffPage" class="page-content">
+                    <div class="page-header">
+                        <h2>Xodimlar</h2>
+                        <button class="btn btn-primary" id="addStaffBtn"><i class="fas fa-plus"></i> Xodim Qo'shish</button>
+                    </div>
+
+                    <div class="staff-grid">
+                        <div class="staff-card">
+                            <div class="staff-avatar">
+                                <img src="https://via.placeholder.com/80" alt="Staff">
+                            </div>
+                            <h3>Abdulloh Mirzoev</h3>
+                            <p class="staff-role">Oshpaz</p>
+                            <p class="staff-phone">+998 91 234 56 78</p>
+                            <p class="staff-status"><span class="badge badge-success">Faol</span></p>
+                            <div class="staff-actions">
+                                <button class="btn btn-sm btn-edit"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="staff-card">
+                            <div class="staff-avatar">
+                                <img src="https://via.placeholder.com/80" alt="Staff">
+                            </div>
+                            <h3>Shoxista Qodirova</h3>
+                            <p class="staff-role">Ofitsiant</p>
+                            <p class="staff-phone">+998 90 123 45 67</p>
+                            <p class="staff-status"><span class="badge badge-success">Faol</span></p>
+                            <div class="staff-actions">
+                                <button class="btn btn-sm btn-edit"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="staff-card">
+                            <div class="staff-avatar">
+                                <img src="https://via.placeholder.com/80" alt="Staff">
+                            </div>
+                            <h3>Javohir Nazarov</h3>
+                            <p class="staff-role">Kuryar</p>
+                            <p class="staff-phone">+998 94 567 89 01</p>
+                            <p class="staff-status"><span class="badge badge-warning">Ish Shaharida</span></p>
+                            <div class="staff-actions">
+                                <button class="btn btn-sm btn-edit"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reports Page -->
+                <div id="reportsPage" class="page-content">
+                    <div class="page-header">
+                        <h2>Hisobotlar</h2>
+                        <div class="report-filters">
+                            <select id="reportType">
+                                <option value="daily">Kunlik</option>
+                                <option value="monthly">Oylik</option>
+                                <option value="yearly">Yillik</option>
+                            </select>
+                            <input type="date" id="reportDate">
+                            <button class="btn btn-success"><i class="fas fa-download"></i> Yuklab Olish</button>
+                        </div>
+                    </div>
+
+                    <div class="reports-grid">
+                        <div class="report-card">
+                            <h3>Daromad</h3>
+                            <div class="report-value">2,850,000 so'm</div>
+                            <p class="report-change">+15% o'tgan kuniga nisbatan</p>
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+
+                        <div class="report-card">
+                            <h3>Buyurtmalar</h3>
+                            <div class="report-value">124</div>
+                            <p class="report-change">+8% o'tgan kuniga nisbatan</p>
+                            <canvas id="ordersChart"></canvas>
+                        </div>
+
+                        <div class="report-card">
+                            <h3>O'rtacha Summa</h3>
+                            <div class="report-value">23,000 so'm</div>
+                            <p class="report-change">-2% o'tgan kuniga nisbatan</p>
+                        </div>
+
+                        <div class="report-card">
+                            <h3>Eng Ko'p So'raladigan Taomlar</h3>
+                            <ol class="top-products-list">
+                                <li>Burger - 45 ta</li>
+                                <li>Plov - 38 ta</li>
+                                <li>Lavash - 32 ta</li>
+                                <li>Shashlik - 28 ta</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Page -->
+                <div id="settingsPage" class="page-content">
+                    <div class="page-header">
+                        <h2>Sozlamalar</h2>
+                    </div>
+
+                    <div class="settings-container">
+                        <div class="settings-section">
+                            <h3><i class="fas fa-store"></i> Restoran Ma'lumotlari</h3>
+                            <form class="settings-form">
+                                <div class="form-group">
+                                    <label>Restoran Nomi</label>
+                                    <input type="text" value="Mini Food" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Telefon Raqami</label>
+                                    <input type="tel" value="+998 71 200 00 00" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" value="info@minifood.uz" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Manzil</label>
+                                    <textarea class="form-control">Tashkent, Yunusabad Tumani</textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Ish Vaqti</label>
+                                    <div class="time-inputs">
+                                        <input type="time" value="09:00"> - <input type="time" value="23:00">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="settings-section">
+                            <h3><i class="fas fa-palette"></i> Tizim Sozlamalari</h3>
+                            <form class="settings-form">
+                                <div class="form-group">
+                                    <label>Til</label>
+                                    <select class="form-control">
+                                        <option>O'zbek (Ўзбек)</option>
+                                        <option>Русский</option>
+                                        <option>English</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Vaqt Zona</label>
+                                    <select class="form-control">
+                                        <option>Tashkent (UTC+5)</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Tema</label>
+                                    <select class="form-control">
+                                        <option>Och (Light)</option>
+                                        <option>To'q (Dark)</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group checkbox">
+                                    <input type="checkbox" id="notifications" checked>
+                                    <label for="notifications">Bildirishnomalarni Yoqish</label>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="settings-section">
+                            <h3><i class="fas fa-lock"></i> Xavfsizlik</h3>
+                            <form class="settings-form">
+                                <div class="form-group">
+                                    <label>Hozirgi Parol</label>
+                                    <input type="password" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Yangi Parol</label>
+                                    <input type="password" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Parolni Tasdiqlash</label>
+                                    <input type="password" class="form-control">
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="settings-actions">
+                            <button class="btn btn-primary"><i class="fas fa-save"></i> Saqlash</button>
+                            <button class="btn btn-secondary"><i class="fas fa-undo"></i> Bekor Qilish</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- Add/Edit Menu Item Modal -->
+    <div class="modal" id="menuModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Taom Qo'shish</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="menuForm">
+                <div class="form-group">
+                    <label>Taom Nomi (O'zbek)</label>
+                    <input type="text" required class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Taom Nomi (Rus)</label>
+                    <input type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Taom Nomi (English)</label>
+                    <input type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Kategoriya</label>
+                    <select required class="form-control">
+                        <option>Fast Food</option>
+                        <option>Taomlar</option>
+                        <option>Ichimliklar</option>
+                        <option>Desertlar</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Narxi (so'm)</label>
+                        <input type="number" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Xaraji (so'm)</label>
+                        <input type="number" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Ta'rifi (O'zbek)</label>
+                    <textarea class="form-control"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Saqlash</button>
+                    <button type="button" class="btn btn-secondary modal-close">Bekor Qilish</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Database Management Page -->
+<div id="databasePage" class="page-content">
+    <div class="page-header">
+        <h2>Baza Boshqarish</h2>
+        <div class="db-actions">
+            <button class="btn btn-primary" id="backupDbBtn"><i class="fas fa-download"></i> Zaxira Nusxasi</button>
+            <button class="btn btn-warning" id="restoreDbBtn"><i class="fas fa-upload"></i> Tiklash</button>
+            <button class="btn btn-danger" id="optimizeDbBtn"><i class="fas fa-tools"></i> Optimizatsiya</button>
+        </div>
+    </div>
+
+    <div class="database-stats">
+        <div class="db-stat-card">
+            <i class="fas fa-database"></i>
+            <div class="db-stat-info">
+                <span class="db-stat-label">Baza Hajmi</span>
+                <span class="db-stat-value" id="dbSize">0 MB</span>
+            </div>
+        </div>
+
+        <div class="db-stat-card">
+            <i class="fas fa-table"></i>
+            <div class="db-stat-info">
+                <span class="db-stat-label">Jadvallar Soni</span>
+                <span class="db-stat-value" id="tableCount">0</span>
+            </div>
+        </div>
+
+        <div class="db-stat-card">
+            <i class="fas fa-rows"></i>
+            <div class="db-stat-info">
+                <span class="db-stat-label">Jami Satrlar</span>
+                <span class="db-stat-value" id="totalRows">0</span>
+            </div>
+        </div>
+
+        <div class="db-stat-card">
+            <i class="fas fa-clock"></i>
+            <div class="db-stat-info">
+                <span class="db-stat-label">Oxirgi Zaxira</span>
+                <span class="db-stat-value" id="lastBackup">Hech qachon</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="db-tabs">
+        <div class="tab-buttons">
+            <button class="tab-btn active" data-tab="tables"><i class="fas fa-th"></i> Jadvallar</button>
+            <button class="tab-btn" data-tab="query"><i class="fas fa-code"></i> SQL So'rov</button>
+            <button class="tab-btn" data-tab="backup"><i class="fas fa-save"></i> Zaxiralar</button>
+            <button class="tab-btn" data-tab="maintenance"><i class="fas fa-wrench"></i> Texnik Xizmat</button>
+        </div>
+
+        <!-- Tables Tab -->
+        <div class="tab-content active" id="tabTables">
+            <div class="table-search">
+                <input type="text" id="tableSearch" placeholder="Jadval nomi orqali qidirish...">
+            </div>
+
+            <div class="tables-grid" id="tablesGrid">
+                <!-- Tables will be loaded here -->
+            </div>
+
+            <!-- Table Details Modal -->
+            <div class="modal" id="tableDetailsModal">
+                <div class="modal-content modal-lg">
+                    <div class="modal-header">
+                        <h2>Jadval Tafsilotlari: <span id="tableName"></span></h2>
+                        <button class="modal-close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="table-details">
+                            <div class="details-row">
+                                <span class="details-label">Jadval Nomi:</span>
+                                <span class="details-value" id="detailTableName">-</span>
+                            </div>
+                            <div class="details-row">
+                                <span class="details-label">Satrlar Soni:</span>
+                                <span class="details-value" id="detailRowCount">-</span>
+                            </div>
+                            <div class="details-row">
+                                <span class="details-label">Hajmi:</span>
+                                <span class="details-value" id="detailTableSize">-</span>
+                            </div>
+                            <div class="details-row">
+                                <span class="details-label">Engine:</span>
+                                <span class="details-value" id="detailEngine">-</span>
+                            </div>
+                            <div class="details-row">
+                                <span class="details-label">Collation:</span>
+                                <span class="details-value" id="detailCollation">-</span>
+                            </div>
+                        </div>
+
+                        <h3>Ustunlar</h3>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Ustun Nomi</th>
+                                    <th>Turi</th>
+                                    <th>Null</th>
+                                    <th>Kalit</th>
+                                    <th>Standart</th>
+                                    <th>Amallar</th>
+                                </tr>
+                            </thead>
+                            <tbody id="columnsTable">
+                                <!-- Columns will be loaded here -->
+                            </tbody>
+                        </table>
+
+                        <h3>Indekslar</h3>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Indeks Nomi</th>
+                                    <th>Ustun</th>
+                                    <th>Turi</th>
+                                    <th>Yagona</th>
+                                </tr>
+                            </thead>
+                            <tbody id="indexesTable">
+                                <!-- Indexes will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SQL Query Tab -->
+        <div class="tab-content" id="tabQuery">
+            <div class="sql-editor">
+                <h3>SQL So'rov Ijrosi</h3>
+                <textarea id="sqlQuery" placeholder="SELECT * FROM users;" rows="10"></textarea>
+                <div class="query-buttons">
+                    <button class="btn btn-primary" id="executeSqlBtn"><i class="fas fa-play"></i> Ijro Etish</button>
+                    <button class="btn btn-secondary" id="clearSqlBtn"><i class="fas fa-trash"></i> Tozalash</button>
+                </div>
+            </div>
+
+            <div class="query-results">
+                <h3>Natijalar</h3>
+                <div id="queryResults" class="results-container">
+                    <!-- Results will be displayed here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Backup Tab -->
+        <div class="tab-content" id="tabBackup">
+            <div class="backup-section">
+                <h3>Zaxira Nusxalari</h3>
+                
+                <div class="backup-form">
+                    <h4>Yangi Zaxira Nusxasi Yaratish</h4>
+                    <div class="form-group">
+                        <label>Zaxira Nomi</label>
+                        <input type="text" id="backupName" placeholder="Masalan: backup_2026_04_30" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="includeData" checked>
+                            Ma'lumotlarni Qo'shish
+                        </label>
+                    </div>
+                    <button class="btn btn-primary" id="createBackupBtn"><i class="fas fa-plus"></i> Yaratish</button>
+                </div>
+
+                <h4>Mavjud Zaxiralar</h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nomi</th>
+                            <th>Hajmi</th>
+                            <th>Sana</th>
+                            <th>Amallar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="backupsTable">
+                        <tr>
+                            <td>backup_2026_04_30_143022.sql</td>
+                            <td>2.4 MB</td>
+                            <td>2026-04-30 14:30:22</td>
+                            <td class="action-buttons">
+                                <button class="btn btn-sm btn-info"><i class="fas fa-download"></i></button>
+                                <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>backup_2026_04_29_093015.sql</td>
+                            <td>2.3 MB</td>
+                            <td>2026-04-29 09:30:15</td>
+                            <td class="action-buttons">
+                                <button class="btn btn-sm btn-info"><i class="fas fa-download"></i></button>
+                                <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Maintenance Tab -->
+        <div class="tab-content" id="tabMaintenance">
+            <div class="maintenance-section">
+                <h3>Texnik Xizmat</h3>
+
+                <div class="maintenance-card">
+                    <h4><i class="fas fa-heartbeat"></i> Jadvallarni Tekshirish</h4>
+                    <p>Barcha jadvallarning integralligi va xatolarini tekshiring.</p>
+                    <button class="btn btn-primary" id="checkTablesBtn"><i class="fas fa-search"></i> Tekshirish</button>
+                    <div id="checkResults" class="results-container" style="margin-top: 15px; display: none;">
+                        <!-- Check results will be displayed here -->
+                    </div>
+                </div>
+
+                <div class="maintenance-card">
+                    <h4><i class="fas fa-compress"></i> Jadvallarni Optimallashtirish</h4>
+                    <p>Jadvallarni optimallashtirish uchun bo'sh joyni tozalang.</p>
+                    <button class="btn btn-warning" id="optimizeTablesBtn"><i class="fas fa-tools"></i> Optimallashtirish</button>
+                    <div id="optimizeResults" class="results-container" style="margin-top: 15px; display: none;">
+                        <!-- Optimize results will be displayed here -->
+                    </div>
+                </div>
+
+                <div class="maintenance-card">
+                    <h4><i class="fas fa-refresh"></i> Jadvallarni Tamir Etish</h4>
+                    <p>Jadvallarning xatolarini avtomatik tuzatish.</p>
+                    <button class="btn btn-danger" id="repairTablesBtn"><i class="fas fa-wrench"></i> Tamir Etish</button>
+                    <div id="repairResults" class="results-container" style="margin-top: 15px; display: none;">
+                        <!-- Repair results will be displayed here -->
+                    </div>
+                </div>
+
+                <div class="maintenance-card">
+                    <h4><i class="fas fa-trash"></i> Jadvallarni Tozalash</h4>
+                    <p>Barcha jadvallarning ma'lumotlarini o'chiring (Oqilona emas!).</p>
+                    <button class="btn btn-danger" id="truncateTablesBtn" onclick="if(confirm('Barcha ma\'lumotlar o\'chiriladi! Davom etmoqchimiz?')) { truncateTables(); }"><i class="fas fa-exclamation"></i> Tozalash</button>
+                </div>
+
+                <div class="maintenance-card">
+                    <h4><i class="fas fa-chart-bar"></i> Baza Statistikasi</h4>
+                    <table class="table table-sm">
+                        <tbody>
+                            <tr>
+                                <td><strong>Baza Veriyasi:</strong></td>
+                                <td id="mysqlVersion">-</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Baza Nomi:</strong></td>
+                                <td id="dbNameInfo">mini_food</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Jami Jadvallar:</strong></td>
+                                <td id="totalTablesInfo">-</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Jami Satrlar:</strong></td>
+                                <td id="totalRowsInfo">-</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Baza Hajmi:</strong></td>
+                                <td id="dbSizeInfo">-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div><!-- /#mainApp -->
+
+    <!-- ===== LOGOUT BOTTOMSHEET ===== -->
+    <div id="logoutOverlay" class="logout-overlay" onclick="closeLogoutSheet()"></div>
+    <div id="logoutSheet" class="logout-sheet">
+        <div class="logout-sheet-handle"></div>
+        <div class="logout-sheet-icon">
+            <i class="fas fa-sign-out-alt"></i>
+        </div>
+        <h3 class="logout-sheet-title">Chiqishni tasdiqlang</h3>
+        <p class="logout-sheet-desc">Haqiqatan ham admin paneldan chiqmoqchimisiz?</p>
+        <div class="logout-sheet-buttons">
+            <button class="btn logout-btn-cancel" onclick="closeLogoutSheet()">
+                <i class="fas fa-times"></i> Yo'q, qolish
+            </button>
+            <button class="btn logout-btn-confirm" id="logoutConfirmBtn" onclick="confirmLogout()">
+                <i class="fas fa-sign-out-alt"></i> Ha, chiqish
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== LOGOUT LOADING OVERLAY ===== -->
+    <div id="logoutLoader" class="logout-loader-overlay">
+        <div class="logout-loader-box">
+            <div class="logout-loader-spinner"></div>
+            <p>Chiqilmoqda<span class="dot-anim">...</span></p>
+        </div>
+    </div>
+
+    <script src="js/database.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
